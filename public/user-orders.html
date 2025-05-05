@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>طلبات العميل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --white: #ffffff;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      padding: 20px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      border-radius: 0 0 10px 10px;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    h1 {
+      font-weight: 600;
+      font-size: 1.8rem;
+    }
+    
+    .back-btn {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    
+    .back-btn:hover {
+      background-color: #3a31c9;
+      transform: translateY(-2px);
+    }
+    
+    .user-info {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+    
+    .user-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    .detail-group {
+      margin-bottom: 15px;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+      color: var(--gray);
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .detail-value {
+      font-size: 1rem;
+    }
+    
+    .orders-container {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+    
+    .order-card {
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .order-id {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .order-date {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+    
+    .order-status {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .status-pending {
+      background-color: rgba(255, 193, 7, 0.2);
+      color: #d39e00;
+    }
+    
+    .status-preparing {
+      background-color: rgba(0, 123, 255, 0.2);
+      color: #0069d9;
+    }
+    
+    .status-delivered {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: var(--success);
+    }
+    
+    .order-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+    
+    .order-section {
+      margin-bottom: 15px;
+    }
+    
+    .section-title {
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 10px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .section-title i {
+      font-size: 0.9rem;
+    }
+    
+    .order-items {
+      margin-top: 10px;
+    }
+    
+    .order-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .order-item:last-child {
+      border-bottom: none;
+    }
+    
+    .item-image {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-left: 10px;
+    }
+    
+    .item-details {
+      flex: 1;
+    }
+    
+    .item-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    
+    .item-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--gray);
+      font-size: 0.85rem;
+      margin-top: 5px;
+    }
+    
+    .order-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+      margin-top: 15px;
+    }
+    
+    .order-total {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--success);
+    }
+    
+    .payment-method {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .payment-cash {
+      color: var(--success);
+    }
+    
+    .payment-card {
+      color: var(--primary);
+    }
+    
+    .no-orders {
+      text-align: center;
+      padding: 50px 0;
+      color: var(--gray);
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .order-body {
+        grid-template-columns: 1fr;
+      }
+      
+      .order-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>طلبات العميل</h1>
+      <a href="all-orders.html" class="back-btn">
+        <i class="fas fa-arrow-right"></i>
+        العودة للوحة التحكم
+      </a>
+    </div>
+  </header>
+  
+  <div class="dashboard-container">
+    <div class="user-info" id="userInfo">
+      <!-- سيتم ملؤها بالجافاسكريبت -->
+    </div>
+    
+    <div class="orders-container">
+      <h2 style="margin-bottom: 20px; color: var(--secondary);">سجل الطلبات</h2>
+      
+      <div id="ordersList">
+        <!-- سيتم إضافة بطاقات الطلبات هنا -->
+      </div>
+      
+      <div id="noOrdersMessage" class="no-orders" style="display: none;">
+        <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 15px; color: #ddd;"></i>
+        <p>لا توجد طلبات متاحة لهذا العميل</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get('userId');
+      
+      if (!userId) {
+        alert('لم يتم تحديد مستخدم');
+        window.location.href = 'dashboard.html';
+        return;
+      }
+      
+      try {
+        // جلب بيانات المستخدم
+        const userResponse = await fetch(`http://localhost:5000/api/users/${userId}`);
+        if (!userResponse.ok) throw new Error('فشل في جلب بيانات المستخدم');
+        const user = await userResponse.json();
+        
+        // عرض معلومات المستخدم
+        document.getElementById('userInfo').innerHTML = `
+          <div class="user-details">
+            <div class="detail-group">
+              <div class="detail-label">اسم العميل</div>
+              <div class="detail-value">${user.name}</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">البريد الإلكتروني</div>
+              <div class="detail-value">${user.email}</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">رقم الهاتف</div>
+              <div class="detail-value">${user.phone || 'غير متوفر'}</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">عدد الطلبات</div>
+              <div class="detail-value" id="ordersCount">جاري التحميل...</div>
+            </div>
+          </div>
+        `;
+        
+        // جلب طلبات المستخدم
+        const ordersResponse = await fetch(`http://localhost:5000/api/orders/user/${userId}`);
+        if (!ordersResponse.ok) throw new Error('فشل في جلب طلبات المستخدم');
+        const orders = await ordersResponse.json();
+        
+        // تحديث عدد الطلبات
+        document.getElementById('ordersCount').textContent = orders.length;
+        
+        // عرض الطلبات
+        renderOrders(orders);
+        
+      } catch (error) {
+        console.error('Error:', error);
+        alert('حدث خطأ أثناء جلب البيانات: ' + error.message);
+        window.location.href = 'all-orders.html';
+      }
+    });
+    
+    function renderOrders(orders) {
+      const ordersList = document.getElementById('ordersList');
+      const noOrdersMessage = document.getElementById('noOrdersMessage');
+      
+      if (!orders || orders.length === 0) {
+        ordersList.style.display = 'none';
+        noOrdersMessage.style.display = 'block';
+        return;
+      }
+      
+      ordersList.style.display = '';
+      noOrdersMessage.style.display = 'none';
+      
+      ordersList.innerHTML = '';
+      
+      orders.forEach(order => {
+        const orderDate = new Date(order.createdAt).toLocaleDateString('ar-EG', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        let statusClass = 'status-pending';
+        let statusText = 'قيد الانتظار';
+        
+        if (order.status === 'Preparing') {
+          statusClass = 'status-preparing';
+          statusText = 'قيد التجهيز';
+        } else if (order.status === 'Delivered') {
+          statusClass = 'status-delivered';
+          statusText = 'تم التوصيل';
+        }
+        
+        let paymentClass = 'payment-cash';
+        let paymentText = 'نقداً';
+        let paymentIcon = 'fa-money-bill-wave';
+        
+        if (order.paymentMethod === 'Credit Card') {
+          paymentClass = 'payment-card';
+          paymentText = 'بطاقة ائتمان';
+          paymentIcon = 'fa-credit-card';
+        }
+        
+        let orderItemsHTML = '';
+        if (order.orderItems && order.orderItems.length > 0) {
+          order.orderItems.forEach(item => {
+            orderItemsHTML += `
+              <div class="order-item">
+                <img src="${item.product?.image ? 'http://localhost:5000/uploads/' + item.product.image : 'https://via.placeholder.com/50'}" 
+                     alt="${item.product?.name || 'منتج'}" 
+                     class="item-image">
+                <div class="item-details">
+                  <div class="item-name">${item.product?.name || 'منتج غير معروف'}</div>
+                  <div class="item-meta">
+                    <span>${item.quantity} × ${item.price} جنيه</span>
+                    <span>${item.quantity * item.price} جنيه</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          orderItemsHTML = '<div class="text-muted">لا توجد منتجات في هذا الطلب</div>';
+        }
+        
+        const orderCard = document.createElement('div');
+        orderCard.className = 'order-card';
+        orderCard.innerHTML = `
+          <div class="order-header">
+            <div>
+              <span class="order-id">الطلب #${order._id.toString().substring(0, 8)}</span>
+              <span class="order-date">${orderDate}</span>
+            </div>
+            <span class="order-status ${statusClass}">${statusText}</span>
+          </div>
+          
+          <div class="order-body">
+            <div class="order-section">
+              <div class="section-title">
+                <i class="fas fa-map-marker-alt"></i>
+                عنوان التوصيل
+              </div>
+              <div>${order.address || 'لا يوجد عنوان'}</div>
+            </div>
+            
+          
+          </div>
+          
+          <div class="order-section">
+            <div class="section-title">
+              <i class="fas fa-shopping-basket"></i>
+              المنتجات
+            </div>
+            <div class="order-items">
+              ${orderItemsHTML}
+            </div>
+          </div>
+          
+          <div class="order-footer">
+            <div class="payment-method ${paymentClass}">
+              <i class="fas ${paymentIcon}"></i>
+              ${paymentText}
+            </div>
+            <div class="order-total">
+              المجموع: ${order.totalPrice} جنيه
+            </div>
+          </div>
+        `;
+        
+        ordersList.appendChild(orderCard);
+      });
+    }
+    
+    function getStatusClass(status) {
+      switch(status) {
+        case 'Preparing': return 'status-preparing';
+        case 'Delivered': return 'status-delivered';
+        default: return 'status-pending';
+      }
+    }
+    
+    function getStatusText(status) {
+      switch(status) {
+        case 'Preparing': return 'قيد التجهيز';
+        case 'Delivered': return 'تم التوصيل';
+        default: return 'قيد الانتظار';
+      }
+    }
+  </script>
+</body>
+</html>

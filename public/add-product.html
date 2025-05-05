@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة المنتجات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --success-color: #4cc9f0;
+      --danger-color: #f72585;
+      --warning-color: #ff9e00;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1em;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      transform: translateY(-2px);
+    }
+    
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+    
+    .btn-edit {
+      background-color: var(--warning-color);
+      color: white;
+    }
+    
+    .btn-delete {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .notification {
+      padding: 12px 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+      text-align: center;
+      display: none;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .file-input-container {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .file-input-button {
+      border: 1px dashed #ddd;
+      border-radius: 6px;
+      padding: 30px 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    
+    .file-input-button:hover {
+      border-color: var(--primary-color);
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .file-input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    
+    .file-name {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #6c757d;
+    }
+    
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      display: none;
+    }
+    
+    .products-table th,
+    .products-table td {
+      padding: 12px 15px;
+      text-align: right;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .products-table th {
+      background-color: #f8f9fa;
+      font-weight: 700;
+    }
+    
+    .products-table tr:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .product-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      width: 95%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #6c757d;
+    }
+    
+    .buttons-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 15px;
+      }
+      
+      .products-table {
+        font-size: 14px;
+      }
+      
+      .products-table th,
+      .products-table td {
+        padding: 8px 10px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .btn-sm {
+        width: 100%;
+      }
+      
+      .product-image {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .modal-content {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>إدارة المنتجات</h2>
+    
+    <div id="notification" class="notification" style="display: none;"></div>
+    
+    <form id="productForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="name">اسم المنتج:</label>
+        <input type="text" id="name" name="name" placeholder="أدخل اسم المنتج" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">وصف المنتج:</label>
+        <textarea id="description" name="description" placeholder="أدخل وصف المنتج" required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="price">السعر:</label>
+        <input type="number" id="price" name="price" placeholder="أدخل السعر" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="categorySelect">التصنيف:</label>
+        <select name="category" id="categorySelect" required>
+          <option value="">اختر تصنيفًا</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>صورة المنتج:</label>
+        <div class="file-input-container">
+          <div class="file-input-button">
+            <i class="fas fa-cloud-upload-alt" style="font-size: 24px; color: #6c757d;"></i>
+            <p>انقر لرفع صورة المنتج</p>
+            <span id="fileName" class="file-name"></span>
+          </div>
+          <input type="file" id="image" name="image" class="file-input" accept="image/*" required>
+        </div>
+      </div>
+      
+      <div class="buttons-container">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-plus"></i> إضافة المنتج
+        </button>
+        <button type="button" id="showProductsBtn" class="btn btn-secondary">
+          <i class="fas fa-list"></i> عرض جميع المنتجات
+        </button>
+      </div>
+    </form>
+    
+    <table class="products-table" id="productsTable">
+      <thead>
+        <tr>
+          <th>الصورة</th>
+          <th>اسم المنتج</th>
+          <th>الوصف</th>
+          <th>السعر</th>
+          <th>التصنيف</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="productsList">
+        <!-- سيتم ملء هذا القسم بالبيانات من الخادم -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- نموذج التعديل -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">تعديل المنتج</h3>
+        <button class="close-btn" id="closeEditModal">&times;</button>
+      </div>
+      <form id="editProductForm" enctype="multipart/form-data">
+        <input type="hidden" id="editProductId">
+        <div class="form-group">
+          <label for="editName">اسم المنتج:</label>
+          <input type="text" id="editName" name="editName" required>
+        </div>
+        <div class="form-group">
+          <label for="editDescription">وصف المنتج:</label>
+          <textarea id="editDescription" name="editDescription" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="editPrice">السعر:</label>
+          <input type="number" id="editPrice" name="editPrice" required>
+        </div>
+        <div class="form-group">
+          <label for="editCategorySelect">التصنيف:</label>
+          <select name="editCategory" id="editCategorySelect" required>
+            <option value="">اختر تصنيفًا</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>صورة المنتج:</label>
+          <div class="file-input-container">
+            <div class="file-input-button">
+              <i class="fas fa-cloud-upload-alt" style="font-size: 24px; color: #6c757d;"></i>
+              <p>انقر لتغيير صورة المنتج</p>
+              <span id="editFileName" class="file-name"></span>
+            </div>
+            <input type="file" id="editImage" name="editImage" class="file-input" accept="image/*">
+          </div>
+          <div id="currentImageContainer" style="margin-top: 10px;"></div>
+        </div>
+        <div class="buttons-container">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> حفظ التغييرات
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // متغيرات لتخزين البيانات
+    let products = [];
+    let categories = [];
+    
+    // تحميل البيانات عند فتح الصفحة
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadCategories();
+      await loadProducts();
+      
+      // إعداد مستمعي الأحداث
+      setupEventListeners();
+    });
+
+    // تحميل قائمة التصنيفات
+    async function loadCategories() {
+      try {
+        const res = await fetch('http://localhost:5000/api/categories');
+        if (!res.ok) throw new Error('Failed to load categories');
+        
+        categories = await res.json();
+        
+        const categorySelect = document.getElementById('categorySelect');
+        const editCategorySelect = document.getElementById('editCategorySelect');
+        
+        // مسح القوائم الحالية
+        categorySelect.innerHTML = '<option value="">اختر تصنيفًا</option>';
+        editCategorySelect.innerHTML = '<option value="">اختر تصنيفًا</option>';
+        
+        // تعبئة القوائم
+        categories.forEach(cat => {
+          const option = document.createElement('option');
+          option.value = cat._id;
+          option.textContent = cat.name;
+          categorySelect.appendChild(option.cloneNode(true));
+          editCategorySelect.appendChild(option);
+        });
+      } catch (err) {
+        showNotification('فشل تحميل قائمة التصنيفات', 'error');
+        console.error('Error loading categories:', err);
+      }
+    }
+
+    // تحميل قائمة المنتجات
+    async function loadProducts() {
+      try {
+        const res = await fetch('http://localhost:5000/api/products');
+        if (!res.ok) throw new Error('Failed to load products');
+        
+        products = await res.json();
+        renderProducts();
+      } catch (err) {
+        showNotification('فشل تحميل قائمة المنتجات', 'error');
+        console.error('Error loading products:', err);
+      }
+    }
+
+    // عرض المنتجات في الجدول
+    function renderProducts() {
+      const table = document.getElementById('productsTable');
+      const tbody = document.getElementById('productsList');
+      
+      tbody.innerHTML = '';
+      
+      if (products.length > 0) {
+        products.forEach(product => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              ${product.image ? `<img src="http://localhost:5000/uploads/${product.image}" class="product-image">` : 'لا توجد صورة'}
+            </td>
+            <td>${product.name}</td>
+            <td>${product.description}</td>
+            <td>${product.price} ر.س</td>
+            <td>${getCategoryName(product.category)}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-sm btn-edit" data-id="${product._id}">
+                  <i class="fas fa-edit"></i> تعديل
+                </button>
+                <button class="btn btn-sm btn-delete" data-id="${product._id}">
+                  <i class="fas fa-trash"></i> حذف
+                </button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+        
+        table.style.display = 'table';
+      } else {
+        table.style.display = 'none';
+        showNotification('لا توجد منتجات مسجلة بعد', 'error');
+      }
+    }
+
+    // الحصول على اسم التصنيف
+    function getCategoryName(category) {
+      if (!category) return 'غير معروف';
+      
+      // إذا كان category كائنًا يحتوي على name
+      if (typeof category === 'object' && category.name) {
+        return category.name;
+      }
+      
+      // إذا كان category هو ID
+      if (typeof category === 'string') {
+        const cat = categories.find(c => c._id === category);
+        return cat ? cat.name : 'غير معروف';
+      }
+      
+      return 'غير معروف';
+    }
+
+    // إعداد مستمعي الأحداث
+    function setupEventListeners() {
+      // عرض اسم الملف عند اختياره
+      document.getElementById('image').addEventListener('change', function(e) {
+        const fileName = document.getElementById('fileName');
+        fileName.textContent = this.files.length > 0 ? this.files[0].name : '';
+      });
+
+      document.getElementById('editImage').addEventListener('change', function(e) {
+        const fileName = document.getElementById('editFileName');
+        fileName.textContent = this.files.length > 0 ? this.files[0].name : '';
+      });
+
+      // إرسال بيانات المنتج الجديد
+      document.getElementById('productForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await submitProductForm();
+      });
+
+      // عرض جميع المنتجات عند الضغط على الزر
+      document.getElementById('showProductsBtn').addEventListener('click', () => {
+        const table = document.getElementById('productsTable');
+        table.style.display = products.length > 0 ? 'table' : 'none';
+      });
+
+      // إغلاق نموذج التعديل
+      document.getElementById('closeEditModal').addEventListener('click', () => {
+        document.getElementById('editModal').style.display = 'none';
+      });
+
+      // حفظ التعديلات
+      document.getElementById('editProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await submitEditForm();
+      });
+    }
+
+    // إرسال نموذج المنتج الجديد
+    async function submitProductForm() {
+      const notification = document.getElementById('notification');
+      notification.style.display = 'none';
+
+      // التحقق من صحة البيانات
+      const name = document.getElementById('name').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const price = document.getElementById('price').value;
+      const category = document.getElementById('categorySelect').value;
+      const image = document.getElementById('image').files[0];
+
+      if (!name || !description || !price || !category || !image) {
+        showNotification('يرجى ملء جميع الحقول المطلوبة', 'error');
+        return;
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('description', description);
+        formData.append('price', price);
+        formData.append('category', category);
+        formData.append('image', image);
+
+        const res = await fetch('http://localhost:5000/api/products', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || 'Failed to add product');
+        }
+
+        const result = await res.json();
+        
+        showNotification('تمت إضافة المنتج بنجاح!', 'success');
+        document.getElementById('productForm').reset();
+        document.getElementById('fileName').textContent = '';
+        await loadProducts();
+      } catch (error) {
+        showNotification('فشل في إضافة المنتج: ' + error.message, 'error');
+        console.error('Error adding product:', error);
+      }
+    }
+
+    // فتح نموذج التعديل
+    async function openEditModal(productId) {
+      const product = products.find(p => p._id === productId);
+      if (!product) {
+        showNotification('المنتج غير موجود', 'error');
+        return;
+      }
+      
+      // تعبئة النموذج ببيانات المنتج
+      document.getElementById('editProductId').value = product._id;
+      document.getElementById('editName').value = product.name;
+      document.getElementById('editDescription').value = product.description;
+      document.getElementById('editPrice').value = product.price;
+      document.getElementById('editCategorySelect').value = product.category?._id || product.category;
+      document.getElementById('editFileName').textContent = '';
+      
+      // عرض الصورة الحالية
+      const imageContainer = document.getElementById('currentImageContainer');
+      imageContainer.innerHTML = '';
+      if (product.image) {
+        const img = document.createElement('img');
+        img.src = `http://localhost:5000/uploads/${product.image}`;
+        img.style.maxWidth = '150px';
+        img.style.maxHeight = '150px';
+        img.style.marginTop = '10px';
+        img.style.borderRadius = '4px';
+        imageContainer.appendChild(img);
+      }
+      
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    // إرسال نموذج التعديل
+    async function submitEditForm() {
+      const id = document.getElementById('editProductId').value;
+      const name = document.getElementById('editName').value.trim();
+      const description = document.getElementById('editDescription').value.trim();
+      const price = document.getElementById('editPrice').value;
+      const category = document.getElementById('editCategorySelect').value;
+      const image = document.getElementById('editImage').files[0];
+      
+      if (!name || !description || !price || !category) {
+        showNotification('يرجى ملء جميع الحقول المطلوبة', 'error');
+        return;
+      }
+
+      try {
+        // إنشاء كائن FormData لإرسال البيانات
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('description', description);
+        formData.append('price', price);
+        formData.append('category', category);
+        if (image) {
+          formData.append('image', image);
+        }
+
+        // إرسال طلب التحديث
+        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+          method: 'PUT',
+          body: formData
+        });
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || 'Failed to update product');
+        }
+        
+        const result = await res.json();
+        
+        showNotification('تم تحديث المنتج بنجاح!', 'success');
+        document.getElementById('editModal').style.display = 'none';
+        await loadProducts();
+      } catch (error) {
+        showNotification('فشل في تحديث المنتج: ' + error.message, 'error');
+        console.error('Error updating product:', error);
+      }
+    }
+
+    // حذف المنتج
+    async function deleteProduct(productId) {
+      if (!confirm('هل أنت متأكد من رغبتك في حذف هذا المنتج؟')) return;
+      
+      try {
+        const res = await fetch(`http://localhost:5000/api/products/${productId}`, {
+          method: 'DELETE',
+        });
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || 'Failed to delete product');
+        }
+        
+        const result = await res.json();
+        
+        showNotification('تم حذف المنتج بنجاح!', 'success');
+        await loadProducts();
+      } catch (error) {
+        showNotification('فشل في حذف المنتج: ' + error.message, 'error');
+        console.error('Error deleting product:', error);
+      }
+    }
+
+    // عرض الإشعارات
+    function showNotification(message, type) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.style.display = 'block';
+      
+      // إخفاء الإشعار بعد 5 ثواني
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 5000);
+    }
+
+    // إضافة مستمعي الأحداث لأزرار التعديل والحذف (ديناميكيًا)
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.btn-edit')) {
+        const productId = e.target.closest('.btn-edit').dataset.id;
+        openEditModal(productId);
+      }
+      
+      if (e.target.closest('.btn-delete')) {
+        const productId = e.target.closest('.btn-delete').dataset.id;
+        deleteProduct(productId);
+      }
+    });
+  </script>
+</body>
+</html>

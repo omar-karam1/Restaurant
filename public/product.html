@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قائمة الطعام | مطعم السلطان الفاخر</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8B0000; /* أحمر داكن - لون رئيسي لمطعم السلطان */
+      --secondary: #D4AF37; /* ذهبي - لون ثانوي */
+      --accent: #F5F5DC; /* بيج فاتح */
+      --light: #FFF8F0; /* كريمي فاتح */
+      --dark: #222; /* أسود داكن */
+      --gray: #6c757d;
+      --white: #ffffff;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), #6B0000);
+      color: var(--white);
+      padding: 20px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+      opacity: 0.15;
+      z-index: 0;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--white);
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .logo-text h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin: 0;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo-text span {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .cart-btn {
+      background-color: var(--white);
+      color: var(--primary);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cart-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      background-color: var(--accent);
+    }
+    
+    /* تصنيفات الوجبات */
+    .categories {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 15px 0;
+      margin-bottom: 30px;
+      scrollbar-width: thin;
+    }
+    
+    .category-btn {
+      background: var(--light);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    
+    .category-btn.active, .category-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      padding: 20px 0;
+    }
+    
+    .product-card {
+      background: var(--white);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-top: 3px solid var(--secondary);
+    }
+    
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .product-image-container {
+      position: relative;
+      overflow: hidden;
+      height: 220px;
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .product-card:hover .product-image {
+      transform: scale(1.05);
+    }
+    
+    .product-category {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background-color: var(--primary);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 2;
+    }
+    
+    .product-info {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .product-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--dark);
+    }
+    
+    .product-description {
+      color: var(--gray);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+    
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .product-price {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .add-to-cart {
+      background: linear-gradient(135deg, var(--primary), #6B0000);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Tajawal', sans-serif;
+    }
+    
+    .add-to-cart:hover {
+      background: linear-gradient(135deg, #6B0000, var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+    }
+    
+    .notification {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      padding: 18px 28px;
+      background-color: var(--success);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      z-index: 1000;
+      animation: fadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 350px;
+    }
+    
+    .notification.error {
+      background-color: var(--danger);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(20px); }
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .logo {
+        margin-bottom: 10px;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+      }
+      
+      .notification {
+        left: 20px;
+        right: 20px;
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+         <a href="index.html" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+    <img src="../uploads/s.png" alt="شعار مطعم السلطان">
+    <div class="logo-text">
+      <h1>السلطان</h1>
+      <span>مطعم فاخر</span>
+    </div>
+  </a>
+      </div>
+      <button class="cart-btn" onclick="window.location.href='cart.html'">
+        <i class="fas fa-shopping-cart"></i>
+        عرض السلة
+      </button>
+    </div>
+  </header>
+  
+  <div class="container">
+    <!-- تصنيفات الوجبات -->
+    <div class="categories">
+      <button class="category-btn active" onclick="filterProducts('all')">الكل</button>
+      <button class="category-btn" onclick="filterProducts('main')">الوجبات الرئيسية</button>
+      <button class="category-btn" onclick="filterProducts('appetizers')">المقبلات</button>
+      <button class="category-btn" onclick="filterProducts('grills')">المشويات</button>
+      <button class="category-btn" onclick="filterProducts('desserts')">الحلويات</button>
+      <button class="category-btn" onclick="filterProducts('drinks')">المشروبات</button>
+    </div>
+    
+    <!-- قائمة المنتجات -->
+    <div class="products-grid" id="products"></div>
+  </div>
+
+  <script>
+    // دالة لجلب المنتجات من API
+    async function fetchProducts() {
+      try {
+        const res = await fetch('http://localhost:5000/api/products');
+        const products = await res.json();
+
+        const container = document.getElementById('products');
+        container.innerHTML = ''; // مسح حالة التحميل
+        
+        if (products.length === 0) {
+          container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:1.2rem; color:var(--gray)">لا توجد منتجات متاحة حالياً</p>';
+          return;
+        }
+
+        products.forEach(p => {
+          const productCard = document.createElement('div');
+          productCard.classList.add('product-card');
+          productCard.innerHTML = `
+            <div class="product-image-container">
+              <span class="product-category">${p.category?.name || 'مميز'}</span>
+              <img src="http://localhost:5000/uploads/${p.image}" alt="${p.name}" class="product-image">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">${p.name}</h3>
+              <p class="product-description">${p.description}</p>
+              <div class="product-footer">
+                <span class="product-price">${p.price} ر.س</span>
+                <button class="add-to-cart" onclick="addToCart('${p._id}', 1)">
+                  <i class="fas fa-cart-plus"></i> إضافة
+                </button>
+              </div>
+            </div>
+          `;
+          container.appendChild(productCard);
+        });
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        showNotification('فشل تحميل قائمة الطعام. يرجى المحاولة لاحقاً.', 'error');
+      }
+    }
+
+    // دالة لإضافة منتج إلى السلة
+    async function addToCart(productId, quantity) {
+      try {
+        const token = localStorage.getItem('authToken');
+        
+        if (!token) {
+          showNotification('يجب تسجيل الدخول أولاً لإضافة عناصر إلى السلة', 'error');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 2000);
+          return;
+        }
+        
+        const res = await fetch('http://localhost:5000/api/cart/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ productId, quantity })
+        });
+
+        const result = await res.json();
+        
+        if (res.status === 200) {
+          showNotification('تمت إضافة العنصر إلى السلة بنجاح!');
+        } else {
+          showNotification(result.message || 'فشل إضافة العنصر إلى السلة', 'error');
+        }
+      } catch (err) {
+        console.error('Add to cart error:', err);
+        showNotification('حدث خطأ أثناء الإضافة إلى السلة. يرجى المحاولة مرة أخرى.', 'error');
+      }
+    }
+
+    // دالة لعرض الإشعارات
+    function showNotification(message, type = 'success') {
+      // إزالة الإشعارات الموجودة
+      const existingNotifications = document.querySelectorAll('.notification');
+      existingNotifications.forEach(n => n.remove());
+      
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} notification-icon"></i>
+        <span>${message}</span>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'fadeOut 0.4s ease-out forwards';
+        setTimeout(() => {
+          notification.remove();
+        }, 400);
+      }, 3000);
+    }
+
+    // استدعاء دالة تحميل المنتجات عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', fetchProducts);
+  </script>
+</body>
+</html>

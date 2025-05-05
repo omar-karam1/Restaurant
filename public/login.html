@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول | مطعم السلطان</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="login.css" rel="stylesheet">
+  <style>
+    
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <i class="fas fa-utensils"></i>
+    </div>
+    <h2>تسجيل الدخول إلى مطعم السلطان</h2>
+    
+    <div id="notification" class="notification" style="display: none;"></div>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">البريد الإلكتروني</label>
+        <div class="input-field">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">كلمة المرور</label>
+        <div class="input-field">
+          <i class="fas fa-key"></i>
+          <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+        </div>
+        <a href="#" class="forgot-password">نسيت كلمة المرور؟</a>
+      </div>
+      
+      <button type="submit" class="btn">
+        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+      </button>
+    </form>
+    
+    <div class="footer">
+      ليس لديك حساب؟ <a href="register.html">انشئ حساب جديد</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const notification = document.getElementById('notification');
+      notification.style.display = 'none';
+      
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      
+      if (!email || !password) {
+        showNotification('يرجى إدخال البريد الإلكتروني وكلمة المرور', 'error');
+        return;
+      }
+
+      try {
+        const user = {
+          email: email,
+          password: password,
+        };
+
+        const res = await fetch('http://localhost:5000/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user),
+        });
+
+        const result = await res.json();
+
+        if (res.status === 200) {
+          // تخزين التوكن في localStorage
+          localStorage.setItem('authToken', result.token);
+          
+          localStorage.setItem('user', JSON.stringify(result.user));
+          // الانتقال إلى صفحة المنتجات
+          if (result.user.role === 'admin') {
+              window.location.href = 'admin.html'; // 👈 صفحة الأدمن
+            } else {
+             window.location.href = 'product.html'; // 👈 صفحة المستخدم العادي
+            }
+        } else {
+          showNotification(result.message || 'بيانات الدخول غير صحيحة', 'error');
+        }
+      } catch (error) {
+        showNotification('حدث خطأ أثناء محاولة الدخول', 'error');
+        console.error('Login error:', error);
+      }
+    });
+
+    function showNotification(message, type) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

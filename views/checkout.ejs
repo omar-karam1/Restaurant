@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إتمام الطلب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --white: #ffffff;
+      --success: #28a745;
+      --warning: #ffc107;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: var(--white);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    
+    h2 {
+      color: var(--secondary);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 3px;
+    }
+    
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .item:hover {
+      background-color: rgba(72, 149, 239, 0.05);
+    }
+    
+    .item-name {
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .item-quantity {
+      color: var(--gray);
+      font-size: 0.9em;
+      margin-right: 5px;
+    }
+    
+    .item-price {
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .total {
+      font-weight: 700;
+      margin: 25px 0;
+      font-size: 1.3em;
+      text-align: left;
+      padding: 15px;
+      background-color: rgba(72, 149, 239, 0.1);
+      border-radius: 8px;
+      color: var(--secondary);
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .empty-cart {
+      background-color: rgba(255, 193, 7, 0.15);
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      margin: 30px 0;
+      border: 1px dashed var(--warning);
+    }
+    
+    .empty-cart p {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    
+    .form-control {
+      padding: 14px 18px;
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      background-color: var(--light);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: left 15px center;
+      background-size: 16px;
+      padding-right: 15px;
+    }
+    
+    .btn {
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: 600;
+      width: 100%;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn:hover {
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+    }
+    
+    .continue-shopping {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: var(--success);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .continue-shopping:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+    
+    .payment-methods {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .payment-method {
+      flex: 1;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .payment-method:hover {
+      border-color: var(--accent);
+    }
+    
+    .payment-method.selected {
+      border: 2px solid var(--primary);
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .payment-method i {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: block;
+      color: var(--primary);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+      
+      .payment-methods {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>إتمام الطلب</h2>
+
+    <% if (cart && cart.items && cart.items.length > 0) { %>
+      <% cart.items.forEach(item => { %>
+        <div class="item">
+          <div>
+            <span class="item-name"><%= item.productName %></span>
+            <span class="item-quantity">× <%= item.quantity %></span>
+          </div>
+          <span class="item-price"><%= item.price * item.quantity %> جنيه</span>
+        </div>
+      <% }) %>
+
+      <div class="total">
+        <span>المجموع الكلي:</span>
+        <span><%= cart.totalPrice %> جنيه</span>
+      </div>
+
+      <form action="/api/orders/create-from-cart" method="POST">
+        <div class="form-group">
+          <label for="address" class="form-label">عنوان التوصيل</label>
+          <input 
+            type="text" 
+            id="address"
+            name="address" 
+            class="form-control" 
+            placeholder="الرجاء إدخال العنوان الكامل للتوصيل" 
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">طريقة الدفع</label>
+          <div class="payment-methods">
+            <div class="payment-method" onclick="selectPaymentMethod('Cash')">
+              <i>💵</i>
+              <div>الدفع نقداً عند الاستلام</div>
+              <input type="radio" name="paymentMethod" value="Cash" required hidden>
+            </div>
+            <div class="payment-method" onclick="selectPaymentMethod('Credit Card')">
+              <i>💳</i>
+              <div>الدفع ببطاقة الائتمان</div>
+              <input type="radio" name="paymentMethod" value="Credit Card" hidden>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn">تأكيد الطلب</button>
+      </form>
+    <% } else { %>
+      <div class="empty-cart">
+        <p>عربة التسوق الخاصة بك فارغة</p>
+        <a href="/menu" class="continue-shopping">العودة إلى القائمة</a>
+      </div>
+    <% } %>
+  </div>
+
+  <script>
+    function selectPaymentMethod(method) {
+      // إزالة التحديد من جميع العناصر
+      document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('selected');
+        el.querySelector('input[type="radio"]').checked = false;
+      });
+      
+      // تحديد العنصر المختار
+      const selectedMethod = document.querySelector(`.payment-method[onclick="selectPaymentMethod('${method}')"]`);
+      selectedMethod.classList.add('selected');
+      selectedMethod.querySelector('input[type="radio"]').checked = true;
+    }
+  </script>
+</body>
+</html>

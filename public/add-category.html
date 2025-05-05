@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة الأصناف</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --success-color: #4cc9f0;
+      --danger-color: #f72585;
+      --warning-color: #ff9e00;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .buttons-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 500;
+      transition: all 0.3s;
+      text-align: center;
+      text-decoration: none;
+      flex: 1;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      transform: translateY(-2px);
+    }
+    
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 14px;
+      flex: 0;
+    }
+    
+    .btn-edit {
+      background-color: var(--warning-color);
+      color: white;
+    }
+    
+    .btn-delete {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .notification {
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 6px;
+      text-align: center;
+      display: none;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .categories-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      display: none;
+    }
+    
+    .categories-table th,
+    .categories-table td {
+      padding: 12px 15px;
+      text-align: right;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .categories-table th {
+      background-color: #f8f9fa;
+      font-weight: 700;
+    }
+    
+    .categories-table tr:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #6c757d;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 15px;
+      }
+      
+      .buttons-container {
+        flex-direction: column;
+      }
+      
+      .categories-table {
+        font-size: 14px;
+      }
+      
+      .categories-table th,
+      .categories-table td {
+        padding: 8px 10px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .btn-sm {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>إدارة الأصناف</h1>
+    
+    <div id="notification" class="notification" style="display: none;"></div>
+    
+    <form id="categoryForm">
+      <div class="form-group">
+        <label for="name">اسم التصنيف:</label>
+        <input type="text" id="name" name="name" required placeholder="أدخل اسم التصنيف">
+      </div>
+      
+      <div class="form-group">
+        <label for="description">الوصف:</label>
+        <textarea id="description" name="description" placeholder="أدخل وصف التصنيف (اختياري)"></textarea>
+      </div>
+      
+      <div class="buttons-container">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-plus"></i> إضافة التصنيف
+        </button>
+        <button type="button" id="showCategoriesBtn" class="btn btn-secondary">
+          <i class="fas fa-list"></i> عرض جميع الأصناف
+        </button>
+      </div>
+    </form>
+    
+    <table class="categories-table" id="categoriesTable">
+      <thead>
+        <tr>
+          <th>اسم التصنيف</th>
+          <th>الوصف</th>
+          <th>تاريخ الإضافة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="categoriesList">
+        <!-- سيتم ملء هذا القسم بالبيانات من الخادم -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- نموذج التعديل -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">تعديل التصنيف</h3>
+        <button class="close-btn" id="closeEditModal">&times;</button>
+      </div>
+      <form id="editCategoryForm">
+        <input type="hidden" id="editCategoryId">
+        <div class="form-group">
+          <label for="editName">اسم التصنيف:</label>
+          <input type="text" id="editName" name="editName" required>
+        </div>
+        <div class="form-group">
+          <label for="editDescription">الوصف:</label>
+          <textarea id="editDescription" name="editDescription"></textarea>
+        </div>
+        <div class="buttons-container">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> حفظ التغييرات
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // متغير لتخزين الأصناف
+    let categories = [];
+    
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const notification = document.getElementById('notification');
+      notification.style.display = 'none';
+      
+      const name = document.getElementById('name').value.trim();
+      const description = document.getElementById('description').value.trim();
+      
+      if (!name) {
+        showNotification('يرجى إدخال اسم التصنيف', 'error');
+        return;
+      }
+      
+      try {
+        const res = await fetch('http://localhost:5000/api/categories/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, description }),
+        });
+
+        const result = await res.json();
+        
+        if (res.status === 201) {
+          showNotification('تمت إضافة التصنيف بنجاح!', 'success');
+          document.getElementById('categoryForm').reset();
+          // إعادة تحميل الأصناف بعد الإضافة
+          await loadCategories();
+        } else {
+          showNotification(result.message || 'حدث خطأ ما!', 'error');
+        }
+      } catch (error) {
+        showNotification('فشل الاتصال بالخادم، يرجى المحاولة لاحقاً', 'error');
+        console.error('Error:', error);
+      }
+    });
+    
+    // دالة لجلب الأصناف من الخادم
+    async function loadCategories() {
+      try {
+        const res = await fetch('http://localhost:5000/api/categories');
+        categories = await res.json();
+        renderCategories();
+      } catch (error) {
+        showNotification('فشل في جلب بيانات الأصناف', 'error');
+        console.error('Error:', error);
+      }
+    }
+    
+    // دالة لعرض الأصناف في الجدول
+    function renderCategories() {
+      const table = document.getElementById('categoriesTable');
+      const tbody = document.getElementById('categoriesList');
+      
+      tbody.innerHTML = '';
+      
+      if (categories.length > 0) {
+        categories.forEach(category => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${category.name}</td>
+            <td>${category.description || 'لا يوجد وصف'}</td>
+            <td>${new Date(category.createdAt).toLocaleDateString('ar-EG')}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-sm btn-edit" data-id="${category._id}">
+                  <i class="fas fa-edit"></i> تعديل
+                </button>
+                <button class="btn btn-sm btn-delete" data-id="${category._id}">
+                  <i class="fas fa-trash"></i> حذف
+                </button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+        
+        table.style.display = 'table';
+        
+        // إضافة مستمعي الأحداث لأزرار التعديل والحذف
+        document.querySelectorAll('.btn-edit').forEach(btn => {
+          btn.addEventListener('click', (e) => openEditModal(e.target.closest('button').dataset.id));
+        });
+        
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+          btn.addEventListener('click', (e) => deleteCategory(e.target.closest('button').dataset.id));
+        });
+      } else {
+        table.style.display = 'none';
+        showNotification('لا توجد أصناف مسجلة بعد', 'error');
+      }
+    }
+    
+    // عرض جميع الأصناف عند الضغط على الزر
+    document.getElementById('showCategoriesBtn').addEventListener('click', loadCategories);
+    
+    // فتح نموذج التعديل
+    function openEditModal(categoryId) {
+      const category = categories.find(c => c._id === categoryId);
+      if (!category) return;
+      
+      document.getElementById('editCategoryId').value = category._id;
+      document.getElementById('editName').value = category.name;
+      document.getElementById('editDescription').value = category.description || '';
+      
+      document.getElementById('editModal').style.display = 'flex';
+    }
+    
+    // إغلاق نموذج التعديل
+    document.getElementById('closeEditModal').addEventListener('click', () => {
+      document.getElementById('editModal').style.display = 'none';
+    });
+    
+    // حفظ التعديلات
+    document.getElementById('editCategoryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const id = document.getElementById('editCategoryId').value;
+      const name = document.getElementById('editName').value.trim();
+      const description = document.getElementById('editDescription').value.trim();
+      
+      try {
+        const res = await fetch(`http://localhost:5000/api/categories/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, description }),
+        });
+        
+        const result = await res.json();
+        
+        if (res.status === 200) {
+          showNotification('تم تحديث التصنيف بنجاح!', 'success');
+          document.getElementById('editModal').style.display = 'none';
+          await loadCategories();
+        } else {
+          showNotification(result.message || 'حدث خطأ أثناء التحديث', 'error');
+        }
+      } catch (error) {
+        showNotification('فشل الاتصال بالخادم', 'error');
+        console.error('Error:', error);
+      }
+    });
+    
+    // حذف التصنيف
+    async function deleteCategory(categoryId) {
+      if (!confirm('هل أنت متأكد من رغبتك في حذف هذا التصنيف؟')) return;
+      
+      try {
+        const res = await fetch(`http://localhost:5000/api/categories/${categoryId}`, {
+          method: 'DELETE',
+        });
+        
+        const result = await res.json();
+        
+        if (res.status === 200) {
+          showNotification('تم حذف التصنيف بنجاح!', 'success');
+          await loadCategories();
+        } else {
+          showNotification(result.message || 'حدث خطأ أثناء الحذف', 'error');
+        }
+      } catch (error) {
+        showNotification('فشل الاتصال بالخادم', 'error');
+        console.error('Error:', error);
+      }
+    }
+    
+    function showNotification(message, type) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.style.display = 'block';
+      
+      // إخفاء الإشعار بعد 5 ثواني
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
